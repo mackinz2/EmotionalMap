@@ -1,7 +1,6 @@
 openai
 firebase-admin
 streamlit
-json
 python-dotenv
 uuid
 datetime
