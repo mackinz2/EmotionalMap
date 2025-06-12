@@ -19,12 +19,10 @@ from system_prompt_blocks import (
 from original_prompt import original_prompt
 
 # --- CONFIGURATION ---
-client = OpenAI(
-    api_key="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"
-)
+client = OpenAI(api_key=st.secrets["openai"]["api_key"])
 
 if not firebase_admin._apps:
-    cred = credentials.Certificate("firebase_key.json")
+    cred = credentials.Certificate(st.secrets["firebase"])
     firebase_admin.initialize_app(cred)
 
 db = firestore.client()
