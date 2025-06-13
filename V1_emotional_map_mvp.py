@@ -21,7 +21,9 @@ from original_prompt import original_prompt
 # --- CONFIGURATION ---
 client = OpenAI(api_key=st.secrets["openai"]["api_key"])
 
-if not firebase_admin._apps:
+try:
+    firebase_admin.get_app()
+except ValueError:
     cred = credentials.Certificate(dict(st.secrets["firebase"]))
     firebase_admin.initialize_app(cred)
 
@@ -121,6 +123,59 @@ def detect_mode(user_input):
 # === A/B Prompt Testing Flag ===
 USE_DYNAMIC_PROMPT = True  # Set to False to test legacy static prompt
 
+# --- RENDER CHAT HISTORY ---
+
+# recent_cut = 2 if user_input else 0
+# messages_to_render = (
+#    st.session_state.messages[:-recent_cut] if recent_cut else st.session_state.messages
+# )
+
+# for i, msg in enumerate(messages_to_render):
+for i, msg in enumerate(st.session_state.messages):
+    if msg.get("content", "").startswith("⏳") or msg.get("content", "").endswith("▌"):
+        continue  # Skip incomplete or placeholder messages
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
+    if msg["role"] == "assistant":
+        with st.expander("💬 Feedback", expanded=False):
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("👍", key=f"up_{i}"):
+                    db.collection("message_feedback").add(
+                        {
+                            "session_id": st.session_state.session_id,
+                            "message_id": i,
+                            "user_prompt": (
+                                st.session_state.messages[i - 1]["content"]
+                                if i > 0
+                                else None
+                            ),
+                            "assistant_response": st.session_state.messages[i][
+                                "content"
+                            ],
+                            "feedback": "landed",
+                            "timestamp": datetime.now(timezone.utc).isoformat(),
+                        }
+                    )
+            with col2:
+                if st.button("👎", key=f"down_{i}"):
+                    db.collection("message_feedback").add(
+                        {
+                            "session_id": st.session_state.session_id,
+                            "message_id": i,
+                            "user_prompt": (
+                                st.session_state.messages[i - 1]["content"]
+                                if i > 0
+                                else None
+                            ),
+                            "assistant_response": st.session_state.messages[i][
+                                "content"
+                            ],
+                            "feedback": "missed",
+                            "timestamp": datetime.now(timezone.utc).isoformat(),
+                        }
+                    )
+
 # --- CHAT INPUT + PROCESSING ---
 user_input = st.chat_input("What would you like to explore?")
 if user_input:
@@ -214,6 +269,7 @@ If nothing new is shared, return null values.
     except:
         pass  # Silent fail if bad JSON
 
+    # --- Build Prompt And Stream Response ---
     if USE_DYNAMIC_PROMPT:
         mode = detect_mode(user_input)
         system_prompt = build_system_prompt(st.session_state.profile, mode=mode)
@@ -283,55 +339,3 @@ If nothing new is shared, return null values.
             "messages": st.session_state.messages,
         }
     )
-
-# --- RENDER CHAT HISTORY ---
-
-recent_cut = 2 if user_input else 0
-messages_to_render = (
-    st.session_state.messages[:-recent_cut] if recent_cut else st.session_state.messages
-)
-
-for i, msg in enumerate(messages_to_render):
-    if msg.get("content", "").startswith("⏳") or msg.get("content", "").endswith("▌"):
-        continue  # Skip incomplete or placeholder messages
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
-    if msg["role"] == "assistant":
-        with st.expander("💬 Feedback", expanded=False):
-            col1, col2 = st.columns(2)
-            with col1:
-                if st.button("👍", key=f"up_{i}"):
-                    db.collection("message_feedback").add(
-                        {
-                            "session_id": st.session_state.session_id,
-                            "message_id": i,
-                            "user_prompt": (
-                                st.session_state.messages[i - 1]["content"]
-                                if i > 0
-                                else None
-                            ),
-                            "assistant_response": st.session_state.messages[i][
-                                "content"
-                            ],
-                            "feedback": "landed",
-                            "timestamp": datetime.now(timezone.utc).isoformat(),
-                        }
-                    )
-            with col2:
-                if st.button("👎", key=f"down_{i}"):
-                    db.collection("message_feedback").add(
-                        {
-                            "session_id": st.session_state.session_id,
-                            "message_id": i,
-                            "user_prompt": (
-                                st.session_state.messages[i - 1]["content"]
-                                if i > 0
-                                else None
-                            ),
-                            "assistant_response": st.session_state.messages[i][
-                                "content"
-                            ],
-                            "feedback": "missed",
-                            "timestamp": datetime.now(timezone.utc).isoformat(),
-                        }
-                    )
