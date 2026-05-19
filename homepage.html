@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emotional Map</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #1e2d6b;
+  --text-dark: #1a1a1a;
+  --text-mid: #555;
+  --text-muted: #999;
+  --serif: 'Playfair Display', Georgia, serif;
+  --sans: 'Inter', system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: var(--sans); background: #fff; color: var(--text-dark); overflow-x: hidden; }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 28px;
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(10px);
+}
+.logo-orb {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%, #fde8b0, #f5a050 50%, #e05c20 80%);
+}
+.nav-btn {
+  background: var(--navy); color: #fff; border: none;
+  border-radius: 7px; padding: 8px 18px;
+  font-family: var(--sans); font-size: 13px; font-weight: 500; cursor: pointer;
+}
+
+/* HERO */
+.hero { padding-top: 56px; display: flex; flex-direction: column; align-items: center; }
+
+.orb-container {
+  width: 100%; display: flex; justify-content: center;
+  overflow: hidden; height: 200px;
+}
+.orb {
+  width: 420px; height: 420px; border-radius: 50%; flex-shrink: 0;
+  background: radial-gradient(circle at 44% 36%, #fde8b5, #f9a858 38%, #e8682a 65%, #cb4a18 85%);
+  animation: float 7s ease-in-out infinite;
+  margin-top: -50px;
+}
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-12px); }
+}
+
+.hero-text { text-align: center; padding: 36px 24px 0; max-width: 760px; }
+
+.hero-h1 {
+  font-family: var(--serif);
+  font-size: clamp(44px, 8vw, 78px);
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--text-dark);
+}
+.hero-h1 .muted { color: #b0b0b0; display: block; }
+
+.divider { width: 180px; height: 1.5px; background: #ccc; margin: 26px auto; }
+
+.hero-sub {
+  font-family: var(--sans);
+  font-size: clamp(15px, 2.2vw, 18px);
+  color: var(--text-mid);
+  line-height: 1.75;
+}
+.hero-sub strong {
+  font-weight: 700; color: var(--text-dark);
+  display: block; font-size: 1.08em;
+}
+
+/* FEATURE SPLIT */
+.feature {
+  display: grid; grid-template-columns: 1fr 1.2fr;
+  gap: 52px; align-items: center;
+  max-width: 860px; margin: 72px auto 0; padding: 0 36px;
+}
+.feature-left h2 {
+  font-family: var(--serif); font-size: clamp(26px, 3.5vw, 36px);
+  font-weight: 600; line-height: 1.2; color: var(--text-dark); margin-bottom: 20px;
+}
+.feature-left p { font-size: 13.5px; color: var(--text-mid); line-height: 1.8; }
+.feature-left p em { font-style: italic; }
+.feature-left p strong { font-weight: 700; color: var(--text-dark); font-style: italic; }
+
+/* Laptop mockup */
+.laptop-wrap {
+  background: linear-gradient(145deg, #c5ede3 0%, #aeddd4 50%, #a0cfc8 100%);
+  border-radius: 12px; padding: 18px 18px 10px;
+}
+.laptop-lid {
+  background: #2a2a2a; border-radius: 7px 7px 0 0; padding: 5px 5px 0;
+}
+.laptop-camera-bar {
+  display: flex; justify-content: center; padding-bottom: 3px;
+}
+.laptop-camera {
+  width: 6px; height: 6px; border-radius: 50%; background: #444;
+}
+.laptop-screen {
+  background: #fff; border-radius: 3px;
+  min-height: 165px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 16px 20px;
+  text-align: center; gap: 8px;
+}
+.screen-orb {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #fde8b5, #f9a858 50%, #e8682a 80%);
+}
+.screen-title { font-size: 9.5px; font-weight: 700; color: #1a1a1a; font-family: var(--sans); }
+.screen-body { font-size: 7.5px; color: #555; line-height: 1.55; font-family: var(--sans); }
+.screen-link { font-size: 7.5px; color: #e05c20; font-family: var(--sans); }
+.laptop-base { background: #3a3a3a; height: 8px; border-radius: 0 0 3px 3px; }
+.laptop-bottom { background: #bbb; height: 8px; border-radius: 0 0 6px 6px; margin: 0 -2px; }
+.laptop-foot { height: 6px; background: #aaa; width: 35%; margin: 0 auto; border-radius: 0 0 3px 3px; }
+
+.get-started-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--navy); color: #fff; border: none;
+  border-radius: 8px; padding: 10px 20px; font-family: var(--sans);
+  font-size: 13.5px; font-weight: 500; cursor: pointer; margin-top: 22px;
+}
+.btn-arrow {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center; font-size: 13px;
+}
+
+/* CARDS */
+.cards { max-width: 880px; margin: 90px auto 0; padding: 0 32px; text-align: center; }
+.cards h2 {
+  font-family: var(--serif); font-size: clamp(22px, 3.5vw, 34px);
+  font-weight: 600; color: var(--text-dark); margin-bottom: 40px;
+}
+.cards-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+
+.card { border: 1px solid #e8e8e8; border-radius: 10px; overflow: hidden; text-align: left; }
+.card-img { height: 190px; display: flex; align-items: center; justify-content: center; padding: 14px; overflow: hidden; }
+.card-img.warm { background: #f7f3ef; }
+.card-img.dk   { background: #1a1a2e; }
+.card-img.blue { background: #eaf2fb; }
+
+.app-screen {
+  background: #fff; border-radius: 6px; box-shadow: 0 2px 12px rgba(0,0,0,.08);
+  width: 92%; height: 100%; padding: 10px 12px; font-family: var(--sans);
+  overflow: hidden; position: relative;
+}
+.app-screen.dark { background: #111827; color: #ccc; }
+
+.app-topbar { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; }
+.app-icon { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+.app-icon.orange { background: radial-gradient(circle at 40% 35%, #fde8b5, #f9a858 50%, #e8682a 80%); }
+.app-icon.gray { background: #d1d5db; }
+.app-icon.blue { background: #93c5fd; }
+
+.app-text { font-size: 5.5px; color: #666; line-height: 1.7; }
+.app-text.light { color: #9ca3af; }
+.app-heading { font-size: 6.5px; font-weight: 700; color: #1a1a1a; margin-bottom: 3px; }
+.app-heading.light { color: #e5e7eb; }
+.app-bullet { font-size: 5.5px; color: #9ca3af; line-height: 1.7; padding-left: 6px; }
+.app-btn-sm { display: inline-block; background: #1e2d6b; color: #fff; font-size: 4.5px; padding: 2px 6px; border-radius: 3px; margin-top: 4px; }
+
+.radar-wrap { display: flex; gap: 8px; align-items: flex-start; margin-top: 4px; }
+.radar-chart { width: 70px; height: 70px; flex-shrink: 0; }
+
+.card-body { padding: 12px 14px 16px; }
+.card-body h3 { font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 5px; }
+.card-body p { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+
+/* BEFORE AFTER */
+.ba-section { max-width: 840px; margin: 60px auto 0; padding: 0 32px; }
+.ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+.ba-col { padding: 28px 0; }
+.ba-col h3 { font-family: var(--sans); font-size: 18px; font-weight: 600; text-align: center; margin-bottom: 28px; }
+.ba-col ul { list-style: none; display: flex; flex-direction: column; gap: 22px; }
+.ba-col.before li { font-family: var(--serif); font-size: 18px; color: var(--text-mid); text-align: center; }
+.ba-col.after  li { font-family: var(--serif); font-size: 17px; color: var(--text-dark); text-align: center; line-height: 1.4; }
+
+/* TESTIMONIALS */
+.testimonials {
+  margin-top: 80px;
+  background: linear-gradient(168deg, #f4a040 0%, #e96520 50%, #c84a12 100%);
+  padding: 72px 32px 80px; text-align: center; position: relative;
+}
+.testimonials::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image: radial-gradient(circle, rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.testimonials h2 {
+  font-family: var(--serif); font-size: clamp(26px, 5vw, 44px);
+  color: #fff; font-weight: 700; margin-bottom: 6px; position: relative; z-index: 1;
+}
+.t-sub { font-size: 13px; color: rgba(255,255,255,.6); margin-bottom: 44px; position: relative; z-index: 1; }
+.t-list { display: flex; flex-direction: column; gap: 22px; max-width: 560px; margin: 0 auto; position: relative; z-index: 1; }
+.tq { font-family: var(--sans); font-size: clamp(13px,2vw,15.5px); color: rgba(255,255,255,.92); line-height: 1.65; }
+.tq.bold { font-weight: 700; font-size: clamp(14px,2.2vw,17px); }
+.tname { display: block; font-size: 11px; color: rgba(255,255,255,.48); margin-top: 3px; }
+
+/* CTA */
+.cta-section { text-align: center; padding: 90px 32px 50px; }
+.cta-section h2 { font-family: var(--serif); font-size: clamp(36px,6.5vw,70px); font-weight: 700; line-height: 1.1; margin-bottom: 22px; }
+.cta-sub { font-size: clamp(15px,2.2vw,19px); font-weight: 600; margin-bottom: 10px; }
+.cta-sub2 { font-size: 16px; color: var(--text-mid); margin-bottom: 34px; }
+.cta-label { font-size: 13px; color: var(--text-muted); margin-bottom: 14px; }
+.cta-btns { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.cta-pill {
+  background: var(--navy); color: #fff; border: none; border-radius: 50px;
+  padding: 13px 28px; font-family: var(--sans); font-size: 13.5px; font-weight: 500;
+  cursor: pointer; white-space: nowrap;
+}
+
+/* JOIN */
+.join { text-align: center; padding: 72px 32px 0; }
+.join h2 { font-family: var(--serif); font-size: clamp(20px,3.5vw,34px); font-weight: 600; max-width: 520px; margin: 0 auto; line-height: 1.3; }
+
+/* THERAPIST */
+.therapist-wrap { padding: 56px 32px 72px; display: flex; justify-content: center; }
+.therapist-card { background: var(--navy); border-radius: 40px; padding: 52px 44px; text-align: center; max-width: 460px; width: 100%; }
+.therapist-card h2 { font-family: var(--serif); font-size: 26px; font-weight: 600; color: #fff; margin-bottom: 14px; }
+.therapist-card p { font-size: 14px; color: rgba(255,255,255,.72); line-height: 1.7; margin-bottom: 6px; }
+.therapist-card .italic { font-style: italic; color: rgba(255,255,255,.5); font-size: 13px; margin-bottom: 18px; }
+.therapist-cta { font-size: 12.5px; color: rgba(255,255,255,.44); }
+
+footer { text-align: center; padding: 22px; font-size: 11.5px; color: var(--text-muted); border-top: 1px solid #f0f0f0; }
+
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 640px) {
+  .feature { grid-template-columns: 1fr; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .ba-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo-orb"></div>
+  <button class="nav-btn">Get Started</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="orb-container">
+    <div class="orb"></div>
+  </div>
+  <div class="hero-text">
+    <h1 class="hero-h1">
+      You're Not Broken,
+      <span class="muted">You're Patterned</span>
+    </h1>
+    <div class="divider"></div>
+    <p class="hero-sub">
+      The Emotional Map Helps You<br>
+      <strong>Uncover The Dynamics That Run Your Life</strong>
+      So You Can Move Forward With Clarity
+    </p>
+  </div>
+</section>
+
+<!-- FEATURE SPLIT -->
+<section class="feature reveal">
+  <div class="feature-left">
+    <h2>Therapy-Level Insights In One Powerful Hour</h2>
+    <p>You've done the therapy and the self-work.</p>
+    <p>And you're <em>still</em> stuck.</p>
+    <p>You want to know:</p>
+    <p><strong>Why do I keep ending up here?</strong></p>
+    <p>The Emotional Map guides you to the answers.</p>
+    <button class="get-started-btn">Get Started <span class="btn-arrow">→</span></button>
+  </div>
+  <div>
+    <div class="laptop-wrap">
+      <div class="laptop-lid">
+        <div class="laptop-camera-bar"><div class="laptop-camera"></div></div>
+        <div class="laptop-screen">
+          <div class="screen-orb"></div>
+          <div class="screen-title">Welcome to the Emotional Map</div>
+          <div class="screen-body">Where you will create your own individualized inner world<br>to explore patterns, insights, and behaviors.</div>
+          <div class="screen-link">The First Step to change is <em>understanding.</em></div>
+        </div>
+        <div class="laptop-base"></div>
+      </div>
+      <div class="laptop-bottom"></div>
+      <div class="laptop-foot"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CARDS -->
+<section class="cards reveal">
+  <h2>Understand Yourself In Hours — Not Years</h2>
+  <div class="cards-grid">
+
+    <div class="card">
+      <div class="card-img warm">
+        <div class="app-screen">
+          <div class="app-topbar">
+            <div class="app-icon orange"></div>
+            <div class="app-icon gray"></div>
+            <div class="app-icon gray"></div>
+          </div>
+          <div class="app-heading">To start building your Emotional Map, let's learn to begin with your current situation.</div>
+          <div class="app-text">
+            Take a moment to reflect on what's happening in your life right now. Consider your relationships, career, health, and daily patterns.<br><br>
+            What emotions come up most often? Where do you feel stuck or reactive? What keeps repeating?<br><br>
+            There are no right answers — just honest ones.
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <h3>Explore Your Emotional Patterns</h3>
+        <p>Formed from past experiences, they quietly guide your choices until you learn to name them.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-img dk">
+        <div class="app-screen dark">
+          <div class="app-heading light">Can you feel how this ties directly into your current tension?</div>
+          <div class="app-text light" style="margin-bottom:4px;">
+            Leaving your job isn't just about ambition or career satisfaction. It brushes up against every role you learned about:
+          </div>
+          <div class="app-bullet">• Don't do it just to fit in</div>
+          <div class="app-bullet">• Stay in the approved path</div>
+          <div class="app-bullet">• Don't risk new struggles</div>
+          <div class="app-bullet">• Figure it out on your own</div>
+          <div class="app-bullet">• Be valuable through service or achievement</div>
+          <div class="app-btn-sm" style="margin-top:6px;">Full Analysis →</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <h3>See How Your Past Shows Up In Your Present</h3>
+        <p>Break cycles by connecting past experiences to present emotions.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-img blue">
+        <div class="app-screen">
+          <div class="app-topbar">
+            <div class="app-icon blue"></div>
+            <div style="font-size:5.5px;color:#3b82f6;font-weight:600;">CLARITY</div>
+          </div>
+          <div class="radar-wrap">
+            <svg class="radar-chart" viewBox="0 0 80 80">
+              <polygon points="40,8 72,28 64,64 16,64 8,28" fill="none" stroke="#dbeafe" stroke-width="0.7"/>
+              <polygon points="40,18 62,32 56,56 24,56 18,32" fill="none" stroke="#dbeafe" stroke-width="0.5"/>
+              <polygon points="40,28 52,36 48,48 32,48 28,36" fill="none" stroke="#dbeafe" stroke-width="0.4"/>
+              <polygon points="40,14 68,30 55,60 20,58 12,26" fill="rgba(59,130,246,0.15)" stroke="#3b82f6" stroke-width="1"/>
+              <polygon points="40,20 58,32 50,55 25,50 18,30" fill="rgba(249,168,88,0.15)" stroke="#f9a858" stroke-width="1"/>
+              <circle cx="40" cy="14" r="2" fill="#3b82f6"/><circle cx="68" cy="30" r="2" fill="#3b82f6"/>
+              <circle cx="55" cy="60" r="2" fill="#3b82f6"/><circle cx="20" cy="58" r="2" fill="#3b82f6"/>
+              <circle cx="12" cy="26" r="2" fill="#3b82f6"/>
+            </svg>
+            <div>
+              <div class="app-heading">Your Pattern Profile</div>
+              <div class="app-text">
+                Core Beliefs: <strong>identified</strong><br>
+                Key Patterns: <strong>3 found</strong><br>
+                Priority Focus: relationships<br><br>
+                Next steps are ready for you.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <h3>Know What Needs To Change — And How To Start</h3>
+        <p>Get clear on what to work on and the first steps to take.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- BEFORE / AFTER -->
+<div class="ba-section reveal">
+  <div class="ba-grid">
+    <div class="ba-col before">
+      <h3>Before</h3>
+      <ul>
+        <li>Stuck In Old Patterns</li>
+        <li>Burned Out Or Reactive</li>
+        <li>In Therapy But Circling</li>
+      </ul>
+    </div>
+    <div class="ba-col after">
+      <h3>After</h3>
+      <ul>
+        <li>See Them Clearly,<br>Change Intentionally</li>
+        <li>Grounded In What's<br>Really Happening</li>
+        <li>Suddenly Clear On Where<br>It's All Coming From</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials reveal">
+  <h2>What People Are Saying<br>About The Emotional Map</h2>
+  <p class="t-sub">Real Reactions From Real People</p>
+  <div class="t-list">
+    <p class="tq bold">"This is like Therapy on Adderall!"<span class="tname">Chelsea R.</span></p>
+    <p class="tq bold">"I'm So Sold."<span class="tname">Austin T.</span></p>
+    <p class="tq">"I've been in the field for years and this still gave me insights I didn't expect. I ended up journaling for over an hour after I finished"</p>
+    <p class="tq bold">"It felt like doing three months of therapy in one sitting."<span class="tname">Alex H.</span></p>
+    <p class="tq bold">"This helped me surface things I hadn't fully processed—and in like half of the time therapy normally takes."</p>
+    <p class="tq">"It's honestly kind of wild how much clarity you can get in just one session."<span class="tname">Jacob J.</span></p>
+    <p class="tq">"The emotional map brought me clarity on a traumatic situation that I have been working on for over 2 years in therapy to understand and process."</p>
+    <p class="tq bold">"I finally feel like I'm getting answers to all the questions I thought I'd never get answers to."<span class="tname">Caz H.</span></p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section reveal">
+  <h2>You Don't Have<br>To Stay Stuck</h2>
+  <p class="cta-sub">The Clarity You've Been Looking<br>For Is Already Within You.</p>
+  <p class="cta-sub2">The Emotional Map Helps You Unlock It</p>
+  <p class="cta-label">Let's Go Ahead and Get Started</p>
+  <div class="cta-btns">
+    <button class="cta-pill">I Want To Understand Myself Better</button>
+    <button class="cta-pill">I Want To Understand A Relationship That Hurt Me</button>
+  </div>
+</section>
+
+<!-- JOIN -->
+<section class="join reveal">
+  <h2>Join The Hundreds Of Others Who Have Made The Invisible, Mappable.</h2>
+</section>
+
+<!-- THERAPIST -->
+<div class="therapist-wrap reveal">
+  <div class="therapist-card">
+    <h2>Are You A Therapist?</h2>
+    <p>Learn how the Emotional Map can help your clients prepare, reflect, and go deeper between sessions.</p>
+    <p class="italic">Built to support, not replace, your work</p>
+    <div class="therapist-cta">Schedule a call with Our Founders 🤝</div>
+  </div>
+</div>
+
+<footer>© 2024 Emotional Map. All rights reserved.</footer>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
